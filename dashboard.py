@@ -1,3 +1,4 @@
+
 import streamlit as st
 from ultralytics import YOLO
 import tensorflow as tf
@@ -8,19 +9,11 @@ from PIL import Image
 # ==========================
 # Konfigurasi Tema
 # ==========================
-<<<<<<< HEAD
 st.set_page_config(
     page_title="SmartVision - Image AI Dashboard",
     page_icon="🐾",
     layout="wide"
 )
-=======
-@st.cache_resource
-def load_models():
-    yolo_model = YOLO("model/Layla Ahmady Hsb_Laporan 4.pt")  # Model deteksi objek
-    classifier = tf.keras.models.load_model("model/Layla Ahmady Hsb_Laporan 2.h5")  # Model klasifikasi
-    return yolo_model, classifier
->>>>>>> ea20f88 (update)
 
 # Tema warna
 bg_color = "#ffe6f2"
@@ -107,7 +100,7 @@ menu = st.sidebar.radio(
     ["Home", "Deteksi Objek (YOLO)", "Klasifikasi Gambar", "Feedback Pengguna"]
 )
 
-
+# ==========================
 # HOME
 # ==========================
 if menu == "Home":
@@ -126,15 +119,15 @@ if menu == "Home":
     st.markdown("<h4 style='text-align:center;'>Contoh Dua Kelas yang Dikenali</h4>", unsafe_allow_html=True)
     col1, col2 = st.columns(2)
     with col1:
-        st.image("https://pixabay.com/photos/dog-puppy-pet-doggy-cute-sweet-2563759/", 
+        st.image("https://cdn.pixabay.com/photo/2015/03/26/09/54/dog-690176_1280.jpg", 
                  caption="Kelas: Dog", use_container_width=True)
     with col2:
-        st.image("https://pixabay.com/photos/wolf-arctic-wolf-white-wolf-canine-8372315/", 
+        st.image("https://cdn.pixabay.com/photo/2017/09/07/08/57/wolf-2722407_1280.jpg", 
                  caption="Kelas: Wolf", use_container_width=True)
 
     st.markdown("""
     <hr>
-    <h4 style='color:#b30086;'>🤖 Cara Kerja</h4>
+    <h4 style='color:#b30086;'>🤖 Cara Kerja SmartVision</h4>
     <p style='font-size:15px; text-align:justify;'>
     <b>YOLO (You Only Look Once)</b> adalah model deteksi objek yang mampu menemukan letak objek di dalam gambar hanya dengan sekali pemindaian.
     YOLO menggambar kotak di sekitar objek yang dikenali, misalnya kepala atau tubuh hewan.
@@ -149,7 +142,6 @@ if menu == "Home":
         💡 Coba unggah gambar di menu “Deteksi Objek” atau “Klasifikasi Gambar” di sidebar kiri!
     </p>
     """, unsafe_allow_html=True)
-
 
 # ==========================
 # YOLO Detection
@@ -227,4 +219,4 @@ elif menu == "Feedback Pengguna":
 # Footer
 # ==========================
 st.markdown("<hr>", unsafe_allow_html=True)
-st.markdown("<p style='text-align:center; color:#b30086;'>Dashboard by Layla Ahmady Hsb | 2025</p>", unsafe_allow_html=True)
+st.markdown("<p style='text-align:center; color:#b30086;'>🌸 Dashboard by Layla Ahmady Hsb | 2025 🌸</p>", unsafe_allow_html=True)
