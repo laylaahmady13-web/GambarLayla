@@ -4,9 +4,9 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.keras.preprocessing import image
 from ultralytics import YOLO
+from pathlib import Path
 
-
-# Tema
+# Tema & CSS
 st.set_page_config(
     page_title="SmartVision Unik",
     page_icon="🚀",
@@ -15,24 +15,60 @@ st.set_page_config(
 
 st.markdown("""
 <style>
-.stApp {background: linear-gradient(120deg, #f0f8ff, #e0f7ff);}
-h1 {text-align:center; color:#1e90ff; font-size:36px;}
-.result-card {background:#ffffffaa; padding:20px; border-radius:15px; margin-top:15px; text-align:center; box-shadow:0px 4px 15px #87ceeb;}
-.result-card:hover {transform:scale(1.03); box-shadow:0px 6px 25px #1e90ff;}
+/* Gradient full page */
+body, .stApp, main {
+    background: linear-gradient(120deg, #f0f8ff, #e0f7ff);
+}
+
+/* Gradient sidebar */
+section[data-testid="stSidebar"] {
+    background: linear-gradient(120deg, #f0f8ff, #e0f7ff);
+}
+
+/* Hapus padding atas default */
+section.main {
+    padding-top: 0rem;
+}
+
+/* Judul */
+h1 {
+    text-align:center; 
+    color:#1e90ff; 
+    font-size:36px;
+}
+
+/* Card hasil prediksi */
+.result-card {
+    background:#ffffffaa; 
+    padding:20px; 
+    border-radius:15px; 
+    margin-top:15px; 
+    text-align:center; 
+    box-shadow:0px 4px 15px #87ceeb;
+}
+.result-card:hover {
+    transform:scale(1.03); 
+    box-shadow:0px 6px 25px #1e90ff;
+}
 </style>
 """, unsafe_allow_html=True)
 
 
+# Path model & sample images
+BASE_DIR = Path(__file__).parent
+YOLO_MODEL_PATH = BASE_DIR / "model/Layla Ahmady Hsb_Laporan 4.pt"
+CNN_MODEL_PATH = BASE_DIR / "model/Layla Ahmady Hsb_Laporan 2.h5"
+SAMPLE_IMAGES_DIR = BASE_DIR / "sample_images"
+
 # Load Model
 @st.cache_resource
 def load_models():
-    yolo_model = YOLO("model/Layla Ahmady Hsb_Laporan 4.pt")
-    cnn_model = tf.keras.models.load_model("model/Layla Ahmady Hsb_Laporan 2.h5")
+    yolo_model = YOLO(str(YOLO_MODEL_PATH))
+    cnn_model = tf.keras.models.load_model(str(CNN_MODEL_PATH))
     return yolo_model, cnn_model
 
 yolo_model, cnn_model = load_models()
 class_labels = ["Dog", "Wolf"]
-
 
 # Class untuk prediksi
 class ImageProcessor:
@@ -55,7 +91,6 @@ class ImageProcessor:
 
 processor = ImageProcessor(yolo_model, cnn_model, class_labels)
 
-
 # Sidebar Menu
 menu = st.sidebar.radio("Pilih Mode:", ["Home","Deteksi YOLO","Klasifikasi CNN"])
 
@@ -72,9 +107,13 @@ if menu=="Home":
     """, unsafe_allow_html=True)
 
     col1, col2 = st.columns(2)
-    col1.image("sample_images/n02085620_13964.jpg", caption="Dog")
-    col2.image("sample_images/animal-world-4069094__480_jpg.rf.c16604c33bd27dfedcf0a714aa8e140c.jpg", caption="Wolf")
-
+    dog_img = SAMPLE_IMAGES_DIR / "dog.jpg"
+    wolf_img = SAMPLE_IMAGES_DIR / "wolf.jpg"
+    if dog_img.exists() and wolf_img.exists():
+        col1.image(str(dog_img), caption="Dog")
+        col2.image(str(wolf_img), caption="Wolf")
+    else:
+        st.warning("Pastikan sample_images berisi dog.jpg & wolf.jpg")
 
 # YOLO Detection
 elif menu=="Deteksi YOLO":
@@ -87,7 +126,6 @@ elif menu=="Deteksi YOLO":
             result_img, boxes = processor.predict_yolo(img)
             st.image(result_img, caption="Hasil Deteksi")
             st.write(f"Objek Terdeteksi: {len(boxes)}")
-
 
 # CNN Classification
 elif menu=="Klasifikasi CNN":
