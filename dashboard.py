@@ -1,4 +1,3 @@
-
 import streamlit as st
 from ultralytics import YOLO
 import tensorflow as tf
@@ -20,39 +19,75 @@ bg_color = "#ffe6f2"
 accent_color = "#b30086"
 highlight_color = "#ff66b3"
 
-# CSS custom
+# CSS custom untuk tampilan lebih rapi dan unik
 st.markdown(f"""
     <style>
-    .stApp {{ background-color: {bg_color}; color: #4b004b; }}
-    .stSidebar {{ background-color: {bg_color}; }}
-    h1 {{ color: {accent_color} !important; text-align:center; font-size: 28px !important; }}
-    h2, h3, h4 {{ color: {accent_color} !important; text-align:center; }}
+    .stApp {{ background-color: {bg_color}; color: #4b004b; font-family: 'Arial', sans-serif; }}
+    .stSidebar {{ background-color: {bg_color}; border-right: 3px solid {highlight_color}; }}
+    h1 {{ color: {accent_color} !important; text-align:center; font-size: 32px !important; font-weight: bold; text-shadow: 2px 2px 4px rgba(0,0,0,0.1); }}
+    h2, h3, h4 {{ color: {accent_color} !important; text-align:center; font-weight: bold; }}
     div[data-testid="stFileUploaderDropzone"] {{
         background-color: #fff0f8 !important;
         border: 2px dashed {highlight_color} !important;
-        border-radius: 12px;
-    }}
-    .result-card {{
-        background: #fff0f8;
-        padding: 20px;
-        border-radius: 14px;
-        border: 2px solid #ff99c8;
-        box-shadow: 0px 4px 12px rgba(255, 182, 193, 0.5);
-        text-align: center;
-        margin-top: 20px;
+        border-radius: 15px;
         transition: all 0.3s ease;
     }}
+    div[data-testid="stFileUploaderDropzone"]:hover {{
+        background-color: #ffe6f2 !important;
+        border-color: {accent_color} !important;
+    }}
+    .result-card {{
+        background: linear-gradient(135deg, #fff0f8, #ffe6f2);
+        padding: 25px;
+        border-radius: 20px;
+        border: 2px solid #ff99c8;
+        box-shadow: 0px 6px 15px rgba(255, 182, 193, 0.4);
+        text-align: center;
+        margin-top: 20px;
+        transition: all 0.4s ease;
+        position: relative;
+        overflow: hidden;
+    }}
+    .result-card::before {{
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+        transition: left 0.5s;
+    }}
+    .result-card:hover::before {{
+        left: 100%;
+    }}
     .result-card:hover {{
-        transform: scale(1.04);
-        box-shadow: 0px 6px 18px rgba(255, 102, 179, 0.6);
+        transform: translateY(-5px) scale(1.02);
+        box-shadow: 0px 10px 25px rgba(255, 102, 179, 0.5);
     }}
     .feedback-box {{
         background-color: #fff0f8;
-        border-radius: 10px;
-        padding: 15px;
+        border-radius: 15px;
+        padding: 20px;
         border: 1px solid #ff99c8;
         margin-top: 20px;
         text-align: center;
+        box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+    }}
+    .home-section {{
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 15px;
+        padding: 20px;
+        margin: 10px 0;
+        box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+    }}
+    .emoji-float {{
+        font-size: 50px;
+        animation: float 3s ease-in-out infinite;
+    }}
+    @keyframes float {{
+        0%, 100% {{ transform: translateY(0px); }}
+        50% {{ transform: translateY(-10px); }}
     }}
     </style>
 """, unsafe_allow_html=True)
@@ -104,70 +139,66 @@ menu = st.sidebar.radio(
 # HOME
 # ==========================
 if menu == "Home":
+    st.markdown("<h1>🐾 SmartVision Dashboard</h1>", unsafe_allow_html=True)
+    
+    # Intro singkat
     st.markdown("""
-    <h2 style='text-align:center; color:#b30086;'>SmartVision Dashboard</h2>
-    <p style='text-align:center; font-size:16px;'>
-        Aplikasi AI sederhana yang memadukan dua model cerdas:
-        <b>YOLO</b> untuk <i>deteksi objek</i> dan <b>CNN</b> untuk <i>klasifikasi gambar</i>.
-        Model ini membantu mengenali perbedaan antara dua hewan yang sering tertukar — anjing dan serigala.
-    </p>
+    <div class="home-section">
+        <p style='text-align:center; font-size:18px; font-weight:bold; color:#4b004b;'>
+            AI Dashboard untuk Deteksi & Klasifikasi Hewan: Anjing vs Serigala
+        </p>
+        <p style='text-align:center; font-size:16px; color:#666;'>
+            Gunakan YOLO untuk deteksi objek dan CNN untuk klasifikasi. Eksplorasi fitur di sidebar!
+        </p>
+    </div>
     """, unsafe_allow_html=True)
 
-    st.write("")  # spasi kecil
-
-    # --- Dua gambar contoh kelas
-    st.markdown("<h4 style='text-align:center;'>Contoh Dua Kelas yang Dikenali</h4>", unsafe_allow_html=True)
+    # Gambar contoh dengan layout rapi
+    st.markdown("<h3 style='text-align:center;'>Contoh Kelas</h3>", unsafe_allow_html=True)
     col1, col2 = st.columns(2)
     
     with col1:
+        st.markdown('<div class="emoji-float">🐶</div>', unsafe_allow_html=True)
         st.image(
             "https://cdn.pixabay.com/photo/2017/08/01/09/04/dog-2563759_1280.jpg", 
-            caption="Kelas: Dog", 
+            caption="**Dog** - Anjing", 
             use_container_width=True
         )
         
     with col2:
+        st.markdown('<div class="emoji-float">🐺</div>', unsafe_allow_html=True)
         st.image(
             "https://cdn.pixabay.com/photo/2023/11/07/12/55/wolf-8372315_1280.jpg", 
-            caption="Kelas: Wolf", 
+            caption="**Wolf** - Serigala", 
             use_container_width=True
         )
 
-    st.markdown("""
-    <hr>
-    <h4 style='color:#b30086;'>🤖 Cara Kerja SmartVision</h4>
-    <p style='font-size:15px; text-align:justify;'>
-    <b>YOLO (You Only Look Once)</b> adalah model deteksi objek yang mampu menemukan letak objek di dalam gambar hanya dengan sekali pemindaian.
-    YOLO menggambar kotak di sekitar objek yang dikenali, misalnya kepala atau tubuh hewan.
-    </p>
-    <p style='font-size:15px; text-align:justify;'>
-    <b>CNN (Convolutional Neural Network)</b> digunakan untuk mengklasifikasikan jenis objek dalam gambar.
-    CNN menganalisis fitur visual seperti bentuk telinga, warna bulu, dan struktur wajah untuk membedakan apakah gambar tersebut adalah
-    <b>Dog</b> atau <b>Wolf</b>.
-    </p>
-    <hr>
-    <p style='text-align:center; color:#b30086; font-size:15px;'>
-        💡 Coba unggah gambar di menu “Deteksi Objek” atau “Klasifikasi Gambar” di sidebar kiri!
-    </p>
-    """, unsafe_allow_html=True)
+    # Cara kerja singkat dengan expander untuk detail
+    with st.expander("🔍 Cara Kerja SmartVision"):
+        st.markdown("""
+        - **YOLO**: Deteksi objek dengan kotak bounding box dalam satu pemindaian.
+        - **CNN**: Klasifikasi berdasarkan fitur visual seperti bentuk dan warna.
+        """)
+
+    st.markdown("<p style='text-align:center; color:#b30086; font-size:16px;'>Mulai dengan mengunggah gambar di menu sidebar!</p>", unsafe_allow_html=True)
 
 # ==========================
 # YOLO Detection
 # ==========================
 elif menu == "Deteksi Objek (YOLO)":
+    st.markdown("<h2>🔍 Deteksi Objek dengan YOLO</h2>", unsafe_allow_html=True)
     st.markdown("""
-<h3 style='color:#b30086;'>Deteksi Objek dengan YOLO</h3>
-<p style='font-size:15px; text-align:justify;'>
-YOLO mendeteksi posisi objek di dalam gambar hanya dengan satu kali pemrosesan. 
-Coba unggah gambar hewan untuk melihat kotak deteksinya!
-</p>
-""", unsafe_allow_html=True)
+    <p style='text-align:center; font-size:16px; color:#666;'>
+        Unggah gambar hewan untuk melihat deteksi objek secara real-time.
+    </p>
+    """, unsafe_allow_html=True)
+    
     uploaded_files = st.file_uploader("Unggah gambar (bisa lebih dari satu):", type=["jpg","jpeg","png"], accept_multiple_files=True)
     if uploaded_files:
         for f in uploaded_files:
             img = Image.open(f)
-            st.image(img, use_container_width=True)
-            with st.spinner("Model YOLO sedang menganalisis..."):
+            st.image(img, use_container_width=True, caption="Gambar Asli")
+            with st.spinner("🔄 Menganalisis dengan YOLO..."):
                 result_img = processor.predict_yolo(img)
                 st.image(result_img, caption="Hasil Deteksi", use_container_width=True)
 
@@ -175,26 +206,27 @@ Coba unggah gambar hewan untuk melihat kotak deteksinya!
 # CNN Classification
 # ==========================
 elif menu == "Klasifikasi Gambar":
+    st.markdown("<h2>🧠 Klasifikasi Gambar dengan CNN</h2>", unsafe_allow_html=True)
     st.markdown("""
-<h3 style='color:#b30086;'>Klasifikasi Gambar dengan CNN</h3>
-<p style='font-size:15px; text-align:justify;'>
-CNN mengenali pola visual seperti bentuk wajah dan warna bulu untuk memutuskan apakah hewan pada gambar adalah <b>Dog</b> atau <b>Wolf</b>.
-</p>
-""", unsafe_allow_html=True)
+    <p style='text-align:center; font-size:16px; color:#666;'>
+        Analisis pola visual untuk klasifikasi Dog atau Wolf.
+    </p>
+    """, unsafe_allow_html=True)
+    
     uploaded_files = st.file_uploader("Unggah gambar (bisa lebih dari satu):", type=["jpg","jpeg","png"], accept_multiple_files=True)
     if uploaded_files:
-        st.info(f"{len(uploaded_files)} gambar diunggah, sedang diproses...")
+        st.info(f"📁 {len(uploaded_files)} gambar diproses...")
         emoji_map = {"Dog": "🐶", "Wolf": "🐺"}
         for f in uploaded_files:
             img = Image.open(f)
-            st.image(img, use_container_width=True)
-            with st.spinner("Model CNN sedang memproses..."):
+            st.image(img, use_container_width=True, caption="Gambar Asli")
+            with st.spinner("🔄 Memproses dengan CNN..."):
                 label, conf = processor.predict_cnn(img)
                 st.markdown(f"""
                     <div class="result-card">
                         <h3>{emoji_map.get(label, label)} {label}</h3>
-                        <p style="font-size:18px; color:{accent_color};">
-                            Confidence: {conf:.2f}%
+                        <p style="font-size:20px; color:{accent_color}; font-weight:bold;">
+                            Akurasi: {conf:.2f}%
                         </p>
                     </div>
                 """, unsafe_allow_html=True)
@@ -203,13 +235,13 @@ CNN mengenali pola visual seperti bentuk wajah dan warna bulu untuk memutuskan a
 # Feedback Pengguna
 # ==========================
 elif menu == "Feedback Pengguna":
-    st.header("Bagikan Pendapatmu!")
-    st.write("Kami ingin tahu seberapa puas kamu dengan dashboard ini.")
+    st.markdown("<h2>Bagikan Pendapatmu!</h2>", unsafe_allow_html=True)
+    st.write("Bantu kami tingkatkan dashboard ini.")
     
-    rating = st.slider("Beri rating (1 = Buruk, 5 = Sempurna)", 1, 5, 3)
-    feedback_text = st.text_area("Ketikkan komentar atau saranmu di sini:")
+    rating = st.slider("⭐ Rating (1 = Buruk, 5 = Sempurna)", 1, 5, 3)
+    feedback_text = st.text_area("Komentar atau saran:")
     
-    if st.button("Kirim Feedback 🙌🏻"):
+    if st.button("Kirim Feedback 🙌"):
         st.success("Terima kasih atas feedback-nya!")
         st.balloons()
         st.session_state["feedback"] = {"rating": rating, "text": feedback_text}
@@ -218,7 +250,7 @@ elif menu == "Feedback Pengguna":
         fb = st.session_state["feedback"]
         st.markdown(f"""
             <div class="feedback-box">
-                <h4>⭐ Rating kamu: {fb['rating']}/5</h4>
+                <h4>⭐ Rating: {fb['rating']}/5</h4>
                 <p><i>"{fb['text']}"</i></p>
             </div>
         """, unsafe_allow_html=True)
@@ -227,4 +259,4 @@ elif menu == "Feedback Pengguna":
 # Footer
 # ==========================
 st.markdown("<hr>", unsafe_allow_html=True)
-st.markdown("<p style='text-align:center; color:#b30086;'>🌸 Dashboard by Layla Ahmady Hsb | 2025 🌸</p>", unsafe_allow_html=True)
+st.markdown("<p style='text-align:center; color:#b30086; font-size:14px;'>Dashboard by Layla Ahmady Hsb | 2025 🐾</p>", unsafe_allow_html=True)
