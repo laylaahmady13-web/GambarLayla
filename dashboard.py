@@ -181,7 +181,7 @@ if menu == "Home":
     with col1:
         st.markdown('<div class="emoji-float">🐶</div>', unsafe_allow_html=True)
         st.image(
-            "https://cdn.pixabay.com/photo/2017/08/01/09/04/dog-2563759_1280.jpg", 
+            "sample_images/n02102040_735_jpg.rf.c81ef292152e8e029218609b4a5fd235.jpg", 
             caption="**Dog** - Anjing", 
             use_container_width=True
         )
