@@ -100,14 +100,6 @@ processor = ImageProcessor(yolo_model, cnn_model, class_labels)
 # Sidebar Menu
 menu = st.sidebar.radio("Pilih Mode:", ["Home","Deteksi YOLO","Klasifikasi CNN", "Feedback"])
 
-
-# Sidebar Feedback
-st.sidebar.markdown("### 💬 Feedback")
-rating = st.sidebar.slider("Beri rating aplikasi ini:", 1, 5, 3)
-comment = st.sidebar.text_area("Tulis komentar atau saran:")
-if st.sidebar.button("Kirim Feedback"):
-    st.sidebar.success(f"Terima kasih! Rating: {rating}, Komentar: {comment}")
-
 # HOME
 if menu=="Home":
     st.markdown("<h1>Classification & Object Detection App</h1>", unsafe_allow_html=True)
