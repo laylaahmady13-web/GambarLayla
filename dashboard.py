@@ -158,9 +158,7 @@ menu = st.sidebar.radio(
 
 filter_option = st.sidebar.selectbox("Filter Deteksi (Opsional):", ["Semua", "Dog", "Wolf"])
 
-# ==========================
-# HOME
-# ==========================
+
 # ==========================
 # HOME (SINTAKS YANG SUDAH DIPERBAIKI)
 # ==========================
@@ -335,4 +333,5 @@ elif menu == "Feedback Pengguna":
 # Footer
 # ==========================
 st.markdown("<hr>", unsafe_allow_html=True)
+st.markdown("<p style='text-align:center; color:#b30086; font-size:14px;'>Dashboard by Layla Ahmady Hsb | 2025 🐾</p>", unsafe_allow_html=True)
 st.markdown("<p style='text-align:center; color:#b30086; font-size:14px;'>Dashboard by Layla Ahmady Hsb | 2025 🐾</p>", unsafe_allow_html=True)
