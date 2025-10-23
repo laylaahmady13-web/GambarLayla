@@ -113,7 +113,7 @@ class ImageProcessor:
         self.yolo_model = yolo_model
         self.cnn_model = cnn_model
         self.class_labels = class_labels
-        self.caption_model = None  # fitur caption dinonaktifkan
+        self.caption_model = None  # Caption dinonaktifkan
 
     def predict_yolo(self, img: Image.Image):
         results = self.yolo_model(img)
@@ -137,8 +137,7 @@ class ImageProcessor:
 # ==========================
 @st.cache_resource
 def load_models():
-    # Paksa YOLO pakai CPU supaya aman di Streamlit Cloud
-    yolo_model = YOLO("model/Layla Ahmady Hsb_Laporan 4.pt", device="cpu")
+    yolo_model = YOLO("model/Layla Ahmady Hsb_Laporan 4.pt")
     classifier = tf.keras.models.load_model("model/Layla Ahmady Hsb_Laporan 2.h5")
     return yolo_model, classifier
 
@@ -152,7 +151,6 @@ menu = st.sidebar.radio(
     "Pilih Mode:",
     ["Home", "Deteksi Objek (YOLO)", "Klasifikasi Gambar", "Riwayat & Visualisasi", "Feedback Pengguna"]
 )
-
 filter_option = st.sidebar.selectbox("Filter Deteksi (Opsional):", ["Semua", "Dog", "Wolf"])
 
 # ==========================
@@ -161,9 +159,8 @@ filter_option = st.sidebar.selectbox("Filter Deteksi (Opsional):", ["Semua", "Do
 if menu == "Home":
     st.markdown("<h1>🚀 SmartVision Pro Dashboard</h1>", unsafe_allow_html=True)
 
-    # Pakai URL publik agar cloud bisa akses
-    dog_img_url = "https://upload.wikimedia.org/wikipedia/commons/6/6e/Golde33443.jpg"
-    wolf_img_url = "https://upload.wikimedia.org/wikipedia/commons/1/1b/Canis_lupus_wolf.jpg"
+    dog_img_path = "sample_images/n02102040_735_jpg.rf.c81ef292152e8e029218609b4a5fd235.jpg"
+    wolf_img_path = "sample_images/animal-world-4069094__480_jpg.rf.c16604c33bd27dfedcf0a714aa8e140c.jpg"
 
     st.markdown("""
     <div class="home-section">
@@ -179,11 +176,10 @@ if menu == "Home":
     col1, col2 = st.columns(2)
     with col1:
         st.markdown('<div class="emoji-float">🐶</div>', unsafe_allow_html=True)
-        st.image(dog_img_url, caption="**Dog** - Anjing", use_container_width=True)
-
+        st.image(dog_img_path, caption="**Dog** - Anjing", use_container_width=True)
     with col2:
         st.markdown('<div class="emoji-float">🐺</div>', unsafe_allow_html=True)
-        st.image(wolf_img_url, caption="**Wolf** - Serigala", use_container_width=True)
+        st.image(wolf_img_path, caption="**Wolf** - Serigala", use_container_width=True)
 
 # ==========================
 # YOLO Detection
@@ -198,7 +194,7 @@ elif menu == "Deteksi Objek (YOLO)":
             with st.spinner("🔄 Menganalisis dengan YOLO..."):
                 result_img, boxes = processor.predict_yolo(img)
                 st.image(result_img, caption="Hasil Deteksi", use_container_width=True)
-                filtered_boxes = [box for box in boxes if filter_option == "Semua" or processor.class_labels[int(box[5])] == filter_option]
+                filtered_boxes = [box for box in boxes if filter_option=="Semua" or processor.class_labels[int(box[5])]==filter_option]
                 st.write(f"**Objek Terdeteksi (Filtered):** {len(filtered_boxes)}")
 
 # ==========================
@@ -208,7 +204,7 @@ elif menu == "Klasifikasi Gambar":
     st.markdown("<h2>🧠 Klasifikasi Gambar Canggih dengan CNN</h2>", unsafe_allow_html=True)
     uploaded_files = st.file_uploader("Unggah gambar:", type=["jpg","jpeg","png"], accept_multiple_files=True)
     if uploaded_files:
-        emoji_map = {"Dog": "🐶", "Wolf": "🐺"}
+        emoji_map = {"Dog":"🐶", "Wolf":"🐺"}
         for f in uploaded_files:
             img = Image.open(f)
             st.image(img, use_container_width=True, caption="Gambar Asli")
@@ -217,7 +213,7 @@ elif menu == "Klasifikasi Gambar":
                 caption = processor.generate_caption(img)
                 st.markdown(f"""
                     <div class="result-card">
-                        <h3>{emoji_map.get(label, label)} {label}</h3>
+                        <h3>{emoji_map.get(label,label)} {label}</h3>
                         <p style="font-size:20px; color:{accent_color}; font-weight:bold;">
                             Akurasi: {conf:.2f}%
                         </p>
@@ -243,7 +239,7 @@ elif menu == "Riwayat & Visualisasi":
 # ==========================
 elif menu == "Feedback Pengguna":
     st.markdown("<h2>💬 Bagikan Pendapatmu!</h2>", unsafe_allow_html=True)
-    rating = st.slider("⭐ Rating (1 = Buruk, 5 = Sempurna)", 1, 5, 3)
+    rating = st.slider("⭐ Rating (1 = Buruk, 5 = Sempurna)", 1,5,3)
     feedback_text = st.text_area("Komentar atau saran:")
     if st.button("Kirim Feedback 🙌"):
         st.success("Terima kasih atas feedback-nya!")
