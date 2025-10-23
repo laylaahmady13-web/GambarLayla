@@ -116,7 +116,11 @@ class ImageProcessor:
         self.yolo_model = yolo_model
         self.cnn_model = cnn_model
         self.class_labels = class_labels
-        self.caption_model = pipeline("image-to-text", model="Salesforce/blip-image-captioning-base")
+        self.caption_model = pipeline(
+            "image-to-text",
+            model="Salesforce/blip-image-captioning-base",
+            framework="pt"  # paksa pakai PyTorch
+        )
 
     def predict_yolo(self, img: Image.Image):
         results = self.yolo_model(img)
