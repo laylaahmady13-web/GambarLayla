@@ -1,7 +1,7 @@
 streamlit==1.29.0
 opencv-python==4.8.1.78
 numpy>=1.25
-tensorflow==2.13.0
+tensorflow==2.20.0
 ultralytics==8.0.0
 Pillow>=9.5.0
 plotly>=5.15.0
