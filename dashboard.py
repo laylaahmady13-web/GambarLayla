@@ -25,7 +25,7 @@ glow_color = "#87ceeb"
 
 st.markdown(f"""
     <style>
-    .stApp {{ background: linear-gradient(135deg, {bg_color}, #e6f7ff); color: #2e2e2e; font-family: 'Roboto', sans-serif; }}
+    .stApp {{ background: linear-gradient(135deg, {bg_color}, #e6f7ff); color: #2e2e2e; font-family: 'Roboto', sans-serif; min-height: 100vh;}}
     .stSidebar {{ background: linear-gradient(135deg, {bg_color}, #d1ecf1); border-right: 4px solid {highlight_color}; box-shadow: 0 0 20px {glow_color}; }}
     h1 {{ color: {accent_color} !important; text-align:center; font-size: 36px !important; font-weight: bold; text-shadow: 0 0 10px {glow_color}; animation: pulse 2s infinite; }}
     h2, h3, h4 {{ color: {accent_color} !important; text-align:center; font-weight: bold; }}
