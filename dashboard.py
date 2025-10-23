@@ -161,9 +161,16 @@ filter_option = st.sidebar.selectbox("Filter Deteksi (Opsional):", ["Semua", "Do
 # ==========================
 # HOME
 # ==========================
+# ==========================
+# HOME (SINTAKS YANG SUDAH DIPERBAIKI)
+# ==========================
 if menu == "Home":
     st.markdown("<h1>🚀 SmartVision Pro Dashboard</h1>", unsafe_allow_html=True)
     
+    # 1. Pastikan Path Gambar Lokal Benar
+    dog_img_path = "sample_images/n02102040_735_jpg.rf.c81ef292152e8e029218609b4a5fd235.jpg"
+    wolf_img_path = "sample_images/animal-world-4069094__480_jpg.rf.c16604c33bd27dfedcf0a714aa8e140c.jpg"
+
     st.markdown("""
     <div class="home-section">
         <p style='text-align:center; font-size:20px; font-weight:bold; color:#2e2e2e;'>
@@ -178,28 +185,36 @@ if menu == "Home":
     st.markdown("<h3 style='text-align:center;'>Contoh Kelas dengan Deskripsi AI</h3>", unsafe_allow_html=True)
     col1, col2 = st.columns(2)
     
+    # --- KOLOM DOG ---
     with col1:
         st.markdown('<div class="emoji-float">🐶</div>', unsafe_allow_html=True)
+        # 2. st.image() menggunakan path lokal
         st.image(
-            "sample_images/n02102040_735_jpg.rf.c81ef292152e8e029218609b4a5fd235.jpg", 
+            dog_img_path, 
             caption="**Dog** - Anjing", 
             use_container_width=True
         )
         if st.button("Deskripsikan Gambar 🐶"):
             with st.spinner("Generating caption..."):
-                caption = processor.generate_caption(Image.open("https://cdn.pixabay.com/photo/2017/08/01/09/04/dog-2563759_1280.jpg"))
+                # 3. Image.open() menggunakan path lokal (INI YANG GAGAL SEBELUMNYA)
+                img_to_caption = Image.open(dog_img_path)
+                caption = processor.generate_caption(img_to_caption)
                 st.write(f"**Deskripsi AI:** {caption}")
-        
+    
+    # --- KOLOM WOLF ---
     with col2:
         st.markdown('<div class="emoji-float">🐺</div>', unsafe_allow_html=True)
+        # 2. st.image() menggunakan path lokal
         st.image(
-            "sample_images/animal-world-4069094__480_jpg.rf.c16604c33bd27dfedcf0a714aa8e140c.jpg", 
+            wolf_img_path, 
             caption="**Wolf** - Serigala", 
             use_container_width=True
         )
         if st.button("Deskripsikan Gambar 🐺"):
             with st.spinner("Generating caption..."):
-                caption = processor.generate_caption(Image.open("https://cdn.pixabay.com/photo/2023/11/07/12/55/wolf-8372315_1280.jpg"))
+                # 3. Image.open() menggunakan path lokal (INI YANG GAGAL SEBELUMNYA)
+                img_to_caption = Image.open(wolf_img_path)
+                caption = processor.generate_caption(img_to_caption)
                 st.write(f"**Deskripsi AI:** {caption}")
 
     with st.expander("🔍 Cara Kerja SmartVision Pro"):
@@ -211,7 +226,7 @@ if menu == "Home":
         """)
 
     st.markdown("<p style='text-align:center; color:#1e90ff; font-size:16px;'>Eksplorasi fitur unik di sidebar!</p>", unsafe_allow_html=True)
-
+    
 # ==========================
 # YOLO Detection
 # ==========================
