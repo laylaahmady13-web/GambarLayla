@@ -3,6 +3,7 @@ ultralytics
 tensorflow
 numpy
 Pillow
-opencv-python
 plotly
 transformers
+accelerate
+torch
