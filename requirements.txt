@@ -1,6 +1,7 @@
-streamlit>=1.26
+streamlit
 ultralytics
 tensorflow
+opencv-python
 pillow
 plotly
 numpy
