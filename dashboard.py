@@ -6,7 +6,6 @@ import numpy as np
 from PIL import Image
 import cv2
 import plotly.express as px
-from transformers import pipeline  # Untuk deskripsi gambar
 import time
 
 # ==========================
@@ -116,11 +115,7 @@ class ImageProcessor:
         self.yolo_model = yolo_model
         self.cnn_model = cnn_model
         self.class_labels = class_labels
-        self.caption_model = pipeline(
-            "image-to-text",
-            model="Salesforce/blip-image-captioning-base",
-            framework="pt"  # paksa pakai PyTorch
-        )
+        self.caption_model = None  # fitur caption dinonaktifkan
 
     def predict_yolo(self, img: Image.Image):
         results = self.yolo_model(img)
@@ -137,8 +132,7 @@ class ImageProcessor:
         return self.class_labels[class_index], confidence
 
     def generate_caption(self, img: Image.Image):
-        caption = self.caption_model(img)[0]['generated_text']
-        return caption
+        return "Deskripsi AI nonaktif pada versi ini."
 
 # ==========================
 # Load Model
@@ -162,14 +156,12 @@ menu = st.sidebar.radio(
 
 filter_option = st.sidebar.selectbox("Filter Deteksi (Opsional):", ["Semua", "Dog", "Wolf"])
 
-
 # ==========================
-# HOME (SINTAKS YANG SUDAH DIPERBAIKI)
+# HOME
 # ==========================
 if menu == "Home":
     st.markdown("<h1>🚀 SmartVision Pro Dashboard</h1>", unsafe_allow_html=True)
     
-    # 1. Pastikan Path Gambar Lokal Benar
     dog_img_path = "sample_images/n02102040_735_jpg.rf.c81ef292152e8e029218609b4a5fd235.jpg"
     wolf_img_path = "sample_images/animal-world-4069094__480_jpg.rf.c16604c33bd27dfedcf0a714aa8e140c.jpg"
 
@@ -179,67 +171,25 @@ if menu == "Home":
             AI Dashboard Canggih untuk Deteksi & Klasifikasi Hewan: Anjing vs Serigala
         </p>
         <p style='text-align:center; font-size:16px; color:#666;'>
-            Fitur Unik: YOLO untuk deteksi objek, CNN untuk klasifikasi, Deskripsi AI, dan Visualisasi!
+            Fitur: YOLO untuk deteksi objek, CNN untuk klasifikasi, dan Visualisasi interaktif!
         </p>
     </div>
     """, unsafe_allow_html=True)
 
-    st.markdown("<h3 style='text-align:center;'>Contoh Kelas dengan Deskripsi AI</h3>", unsafe_allow_html=True)
     col1, col2 = st.columns(2)
-    
-    # --- KOLOM DOG ---
     with col1:
         st.markdown('<div class="emoji-float">🐶</div>', unsafe_allow_html=True)
-        # 2. st.image() menggunakan path lokal
-        st.image(
-            dog_img_path, 
-            caption="**Dog** - Anjing", 
-            use_container_width=True
-        )
-        if st.button("Deskripsikan Gambar 🐶"):
-            with st.spinner("Generating caption..."):
-                # 3. Image.open() menggunakan path lokal (INI YANG GAGAL SEBELUMNYA)
-                img_to_caption = Image.open(dog_img_path)
-                caption = processor.generate_caption(img_to_caption)
-                st.write(f"**Deskripsi AI:** {caption}")
-    
-    # --- KOLOM WOLF ---
+        st.image(dog_img_path, caption="**Dog** - Anjing", use_container_width=True)
+
     with col2:
         st.markdown('<div class="emoji-float">🐺</div>', unsafe_allow_html=True)
-        # 2. st.image() menggunakan path lokal
-        st.image(
-            wolf_img_path, 
-            caption="**Wolf** - Serigala", 
-            use_container_width=True
-        )
-        if st.button("Deskripsikan Gambar 🐺"):
-            with st.spinner("Generating caption..."):
-                # 3. Image.open() menggunakan path lokal (INI YANG GAGAL SEBELUMNYA)
-                img_to_caption = Image.open(wolf_img_path)
-                caption = processor.generate_caption(img_to_caption)
-                st.write(f"**Deskripsi AI:** {caption}")
+        st.image(wolf_img_path, caption="**Wolf** - Serigala", use_container_width=True)
 
-    with st.expander("🔍 Cara Kerja SmartVision Pro"):
-        st.markdown("""
-        - **YOLO**: Deteksi objek cepat dengan bounding box.
-        - **CNN**: Klasifikasi berdasarkan fitur visual.
-        - **AI Deskripsi**: Gunakan model BLIP untuk deskripsi gambar.
-        - **Visualisasi**: Grafik distribusi hasil deteksi.
-        """)
-
-    st.markdown("<p style='text-align:center; color:#1e90ff; font-size:16px;'>Eksplorasi fitur unik di sidebar!</p>", unsafe_allow_html=True)
-    
 # ==========================
 # YOLO Detection
 # ==========================
 elif menu == "Deteksi Objek (YOLO)":
     st.markdown("<h2>🔍 Deteksi Objek Canggih dengan YOLO</h2>", unsafe_allow_html=True)
-    st.markdown("""
-    <p style='text-align:center; font-size:16px; color:#666;'>
-        Unggah gambar untuk deteksi objek. Gunakan filter untuk fokus spesifik.
-    </p>
-    """, unsafe_allow_html=True)
-    
     uploaded_files = st.file_uploader("Unggah gambar:", type=["jpg","jpeg","png"], accept_multiple_files=True)
     if uploaded_files:
         for f in uploaded_files:
@@ -248,34 +198,21 @@ elif menu == "Deteksi Objek (YOLO)":
             with st.spinner("🔄 Menganalisis dengan YOLO..."):
                 result_img, boxes = processor.predict_yolo(img)
                 st.image(result_img, caption="Hasil Deteksi", use_container_width=True)
-                
                 filtered_boxes = [box for box in boxes if filter_option == "Semua" or processor.class_labels[int(box[5])] == filter_option]
                 st.write(f"**Objek Terdeteksi (Filtered):** {len(filtered_boxes)}")
-                
-                if st.button("Export Hasil sebagai Gambar"):
-                    result_img_pil = Image.fromarray(result_img)
-                    result_img_pil.save("hasil_deteksi.png")
-                    st.download_button("Download", data=open("hasil_deteksi.png", "rb"), file_name="hasil_deteksi.png")
 
 # ==========================
 # CNN Classification
 # ==========================
 elif menu == "Klasifikasi Gambar":
     st.markdown("<h2>🧠 Klasifikasi Gambar Canggih dengan CNN</h2>", unsafe_allow_html=True)
-    st.markdown("""
-    <p style='text-align:center; font-size:16px; color:#666;'>
-        Analisis pola visual + deskripsi AI untuk klasifikasi Dog atau Wolf.
-    </p>
-    """, unsafe_allow_html=True)
-    
     uploaded_files = st.file_uploader("Unggah gambar:", type=["jpg","jpeg","png"], accept_multiple_files=True)
     if uploaded_files:
-        st.info(f"📁 {len(uploaded_files)} gambar diproses...")
         emoji_map = {"Dog": "🐶", "Wolf": "🐺"}
         for f in uploaded_files:
             img = Image.open(f)
             st.image(img, use_container_width=True, caption="Gambar Asli")
-            with st.spinner("🔄 Memproses dengan CNN + AI..."):
+            with st.spinner("🔄 Memproses dengan CNN..."):
                 label, conf = processor.predict_cnn(img)
                 caption = processor.generate_caption(img)
                 st.markdown(f"""
@@ -295,18 +232,10 @@ elif menu == "Klasifikasi Gambar":
 # ==========================
 elif menu == "Riwayat & Visualisasi":
     st.markdown("<h2>📊 Riwayat & Visualisasi Hasil</h2>", unsafe_allow_html=True)
-    st.markdown("""
-    <p style='text-align:center; font-size:16px; color:#666;'>
-        Lihat distribusi hasil deteksi dan klasifikasi sebelumnya.
-    </p>
-    """, unsafe_allow_html=True)
-    
     if "history" not in st.session_state:
         st.session_state.history = {"Dog": 5, "Wolf": 3}
-    
     fig = px.pie(values=list(st.session_state.history.values()), names=list(st.session_state.history.keys()), title="Distribusi Klasifikasi")
     st.plotly_chart(fig)
-    
     st.table(st.session_state.history)
 
 # ==========================
@@ -314,16 +243,12 @@ elif menu == "Riwayat & Visualisasi":
 # ==========================
 elif menu == "Feedback Pengguna":
     st.markdown("<h2>💬 Bagikan Pendapatmu!</h2>", unsafe_allow_html=True)
-    st.write("Bantu kami tingkatkan dashboard unik ini.")
-    
     rating = st.slider("⭐ Rating (1 = Buruk, 5 = Sempurna)", 1, 5, 3)
     feedback_text = st.text_area("Komentar atau saran:")
-    
     if st.button("Kirim Feedback 🙌"):
         st.success("Terima kasih atas feedback-nya!")
         st.balloons()
         st.session_state["feedback"] = {"rating": rating, "text": feedback_text}
-
     if "feedback" in st.session_state:
         fb = st.session_state["feedback"]
         st.markdown(f"""
@@ -337,5 +262,4 @@ elif menu == "Feedback Pengguna":
 # Footer
 # ==========================
 st.markdown("<hr>", unsafe_allow_html=True)
-st.markdown("<p style='text-align:center; color:#b30086; font-size:14px;'>Dashboard by Layla Ahmady Hsb | 2025 🐾</p>", unsafe_allow_html=True)
 st.markdown("<p style='text-align:center; color:#b30086; font-size:14px;'>Dashboard by Layla Ahmady Hsb | 2025 🐾</p>", unsafe_allow_html=True)
