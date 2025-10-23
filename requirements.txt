@@ -7,3 +7,4 @@ plotly
 transformers
 accelerate
 torch
+opencv-python-headless
