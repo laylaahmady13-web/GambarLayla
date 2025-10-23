@@ -151,6 +151,6 @@ elif menu=="Klasifikasi CNN":
 st.markdown("<hr>", unsafe_allow_html=True)
 st.markdown("""
 <p style='text-align:center; font-size:12px; color:#555;'>
-Dashboard by Layla Ahmady Hsb 🔥 | Simple, Unik & Interaktif
+Dashboard by Layla Ahmady Hsb 🔥
 </p>
 """, unsafe_allow_html=True)
