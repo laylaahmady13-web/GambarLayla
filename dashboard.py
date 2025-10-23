@@ -26,8 +26,8 @@ h1 {text-align:center; color:#1e90ff; font-size:36px;}
 # Load Model
 @st.cache_resource
 def load_models():
-    yolo_model = YOLO("Layla Ahmady Hsb_Laporan 4.pt")
-    cnn_model = tf.keras.models.load_model("Layla Ahmady Hsb_Laporan 2.h5")
+    yolo_model = YOLO("model/Layla Ahmady Hsb_Laporan 4.pt")
+    cnn_model = tf.keras.models.load_model("model/Layla Ahmady Hsb_Laporan 2.h5")
     return yolo_model, cnn_model
 
 yolo_model, cnn_model = load_models()
