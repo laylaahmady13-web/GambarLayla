@@ -193,7 +193,7 @@ if menu == "Home":
     with col2:
         st.markdown('<div class="emoji-float">🐺</div>', unsafe_allow_html=True)
         st.image(
-            "https://cdn.pixabay.com/photo/2023/11/07/12/55/wolf-8372315_1280.jpg", 
+            "sample_images/animal-world-4069094__480_jpg.rf.c16604c33bd27dfedcf0a714aa8e140c.jpg", 
             caption="**Wolf** - Serigala", 
             use_container_width=True
         )
