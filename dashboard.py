@@ -5,9 +5,8 @@ import tensorflow as tf
 from tensorflow.keras.preprocessing import image
 from ultralytics import YOLO
 
-# ==========================
-# Konfigurasi Tema Unik
-# ==========================
+
+# Tema
 st.set_page_config(
     page_title="SmartVision Unik",
     page_icon="🚀",
@@ -67,14 +66,14 @@ if menu=="Home":
 
     st.markdown("""
     <div style="background:#ffffffaa; padding:15px; border-radius:15px; text-align:center; box-shadow:0px 4px 15px #87ceeb;">
-        <b>YOLO:</b> Digunakan untuk mendeteksi objek di gambar (misal anjing 🐶 dan serigala 🐺).<br>
+        <b>YOLO:</b> Digunakan untuk mendeteksi objek di gambar (misal anjing dan serigala).<br>
         <b>CNN:</b> Digunakan untuk mengklasifikasikan gambar menjadi kelas Dog atau Wolf.
     </div>
     """, unsafe_allow_html=True)
 
     col1, col2 = st.columns(2)
-    col1.image("sample_images/dog.jpg", caption="Dog")
-    col2.image("sample_images/wolf.jpg", caption="Wolf")
+    col1.image("sample_images/n02085620_13964.jpg", caption="Dog")
+    col2.image("sample_images/animal-world-4069094__480_jpg.rf.c16604c33bd27dfedcf0a714aa8e140c.jpg", caption="Wolf")
 
 
 # YOLO Detection
