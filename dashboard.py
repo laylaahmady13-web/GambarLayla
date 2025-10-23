@@ -102,7 +102,7 @@ menu = st.sidebar.radio("Pilih Mode:", ["Home","Deteksi YOLO","Klasifikasi CNN"]
 
 # HOME
 if menu=="Home":
-    st.markdown("<h1>🚀 SmartVision Unik</h1>", unsafe_allow_html=True)
+    st.markdown("<h1>🚀 Classification & Object Detection App</h1>", unsafe_allow_html=True)
     st.write("Aplikasi deteksi objek dan klasifikasi gambar dengan YOLO & CNN.")
 
     st.markdown("""
