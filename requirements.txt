@@ -1,7 +1,6 @@
-streamlit
+streamlit>=1.26
 ultralytics
 tensorflow
-numpy
-Pillow
+pillow
 plotly
-torch
+numpy
